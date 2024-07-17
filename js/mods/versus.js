@@ -1,0 +1,72 @@
+import { Paddle } from '../scenes/paddle.js';
+import { Ball } from '../scenes/ball.js';
+import { setupControls } from '../scenes/controls.js';
+import { Score } from '../scenes/score.js';
+
+export class Versus {
+
+    constructor(gameArea, playerNames, ctx, font) {
+        this.gameArea = gameArea;
+        this.playerNames = playerNames;
+        this.ctx = ctx;
+
+        this.playerPaddle = new Paddle(this.gameArea.gameX + 10, this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2, 10, 100, 'white');
+        this.aiPaddle = new Paddle(this.gameArea.gameX + this.gameArea.gameWidth - 20, this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2, 10, 100, 'white');
+        this.score = new Score(ctx, font, gameArea, playerNames[0], playerNames[1]);
+
+
+        this.ball = new Ball(gameArea.gameX + gameArea.gameWidth / 2, gameArea.gameY + gameArea.gameHeight / 2, 10, 'white', 5);
+
+        this.gameTitle = "Versus Mode"
+        this.useAngleBounce = true
+
+        this.main();
+    }
+
+    main() {
+        // Initialiser le jeu
+        setupControls(this.playerPaddle, this.aiPaddle);
+        const directions = [
+            { x: 1, y: 0.5 },
+            { x: 1, y: -0.5 },
+            { x: -1, y: 0.5 },
+            { x: -1, y: -0.5 }
+        ];
+        this.ball.spawn(this.gameArea, directions);
+        this.loop();
+    }
+
+    loop() {
+        this.gameArea.clear(this.ctx);
+        this.score.drawTitle(this.gameTitle);
+
+        this.score.drawScore();
+        
+        if (this.ball.x < this.gameArea.gameX) {
+            this.score.incrementPlayer2Score();
+            const directions = [
+                { x: 1, y: 0.5 },
+                { x: 1, y: -0.5 }
+            ];
+            this.ball.spawn(this.gameArea, directions);
+        }
+        else if (this.ball.x + this.ball.size > this.gameArea.gameX + this.gameArea.gameWidth) {
+            this.score.incrementPlayer1Score();
+            const directions = [
+                { x: -1, y: 0.5 },
+                { x: -1, y: -0.5 }
+            ];
+            this.ball.spawn(this.gameArea, directions);
+        }
+
+        this.playerPaddle.move(this.gameArea);
+        this.aiPaddle.move(this.gameArea);
+        this.ball.move(this.gameArea, this.playerPaddle, this.aiPaddle, this.useAngleBounce);
+
+        this.gameArea.draw(this.ctx);
+        this.playerPaddle.draw(this.ctx);
+        this.aiPaddle.draw(this.ctx);
+        this.ball.draw(this.ctx);
+        requestAnimationFrame(this.loop.bind(this));
+    }
+}
