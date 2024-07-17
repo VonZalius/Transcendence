@@ -39,7 +39,7 @@ function main(gameMode = "versus", playerNames = ["Player1", "Player2"]) {
 // Attendre que le DOM soit entièrement chargé avant de lancer le jeu
 document.addEventListener("DOMContentLoaded", () => {
     // Appel de la fonction main avec des paramètres par défaut ou spécifiés
-    main('versus', ['Zalius', 'Fenris']);
+    main('tournament', ['Zalius', 'Spartan', 'Cedric']);
 });
 
 

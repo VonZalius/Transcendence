@@ -9,16 +9,16 @@ export class Versus {
         this.gameArea = gameArea;
         this.playerNames = playerNames;
         this.ctx = ctx;
+        this.isGameOver = false;
 
         this.playerPaddle = new Paddle(this.gameArea.gameX + 10, this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2, 10, 100, 'white');
         this.aiPaddle = new Paddle(this.gameArea.gameX + this.gameArea.gameWidth - 20, this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2, 10, 100, 'white');
         this.score = new Score(ctx, font, gameArea, playerNames[0], playerNames[1]);
-
-
         this.ball = new Ball(gameArea.gameX + gameArea.gameWidth / 2, gameArea.gameY + gameArea.gameHeight / 2, 10, 'white', 5);
 
         this.gameTitle = "Versus Mode"
         this.useAngleBounce = true
+        this.maxScore = 10;
 
         this.main();
     }
@@ -37,10 +37,12 @@ export class Versus {
     }
 
     loop() {
+        if (this.isGameOver) {
+            return;  // Arrêter la boucle de jeu si le jeu est terminé
+        }
         this.gameArea.clear(this.ctx);
-        this.score.drawTitle(this.gameTitle);
-
-        this.score.drawScore();
+        
+        
         
         if (this.ball.x < this.gameArea.gameX) {
             this.score.incrementPlayer2Score();
@@ -58,15 +60,29 @@ export class Versus {
             ];
             this.ball.spawn(this.gameArea, directions);
         }
-
+        
         this.playerPaddle.move(this.gameArea);
         this.aiPaddle.move(this.gameArea);
         this.ball.move(this.gameArea, this.playerPaddle, this.aiPaddle, this.useAngleBounce);
-
+        
         this.gameArea.draw(this.ctx);
         this.playerPaddle.draw(this.ctx);
         this.aiPaddle.draw(this.ctx);
         this.ball.draw(this.ctx);
+        this.game_over_screen();
+        this.score.drawTitle(this.gameTitle);
+        this.score.drawScore();
         requestAnimationFrame(this.loop.bind(this));
+    }
+
+    game_over_screen() {
+        if (this.score.player1Score > this.maxScore) {
+            this.isGameOver = true;
+            this.score.drawEnd(1);
+        }
+        else if (this.score.player2Score > this.maxScore) {
+            this.isGameOver = true;
+            this.score.drawEnd(2);
+        }
     }
 }

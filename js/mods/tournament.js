@@ -1,6 +1,7 @@
 import { Paddle } from '../scenes/paddle.js';
 import { Ball } from '../scenes/ball.js';
 import { setupControls } from '../scenes/controls.js';
+import { Score } from '../scenes/score.js';
 
 export class Tournament {
 
@@ -9,43 +10,162 @@ export class Tournament {
         this.playerNames = playerNames;
         this.ctx = ctx;
         this.font = font;
+        this.isGameOver = false;
 
         this.playerPaddle = new Paddle(this.gameArea.gameX + 10, this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2, 10, 100, 'white');
         this.aiPaddle = new Paddle(this.gameArea.gameX + this.gameArea.gameWidth - 20, this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2, 10, 100, 'white');
+        this.score = new Score(ctx, font, gameArea, playerNames[0], playerNames[1]);
+        this.ball = new Ball(gameArea.gameX + gameArea.gameWidth / 2, gameArea.gameY + gameArea.gameHeight / 2, 10, 'white', 5);
 
-        this.ball = new Ball(gameArea.gameX + gameArea.gameWidth / 2, gameArea.gameY + gameArea.gameHeight / 2, 10, 'white', 10);
+        this.currentMatch = 0;
+        this.round = 1;
+        this.matches = this.createAllMatches(playerNames);
+        this.wins = this.initializeWins(playerNames);
+        this.activePlayers = playerNames.slice();
 
         this.gameTitle = "Tournament Mode"
-        this.useAngleBounce = false
+        this.useAngleBounce = true
+        this.maxScore = 10;
+
 
         this.main();
+    }
+
+    initializeWins(playerNames) {
+        let wins = {};
+        for (let name of playerNames) {
+            wins[name] = 0;
+        }
+        return wins;
+    }
+
+    createAllMatches(playerNames) {
+        let matches = [];
+        for (let i = 0; i < playerNames.length; i++) {
+            for (let j = i + 1; j < playerNames.length; j++) {
+                matches.push([playerNames[i], playerNames[j]]);
+            }
+        }
+        return this.shuffle(matches); // Mélanger les matchs pour obtenir un ordre aléatoire
+    }
+
+    shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
     }
 
     main() {
         // Initialiser le jeu
         setupControls(this.playerPaddle, this.aiPaddle);
-        this.loop();  // Commencer la boucle de jeu
+        this.startMatch();
+    }
+
+    startMatch() {
+        if (this.currentMatch >= this.matches.length) {
+            this.setupNextRound();
+            return;
+        }
+
+        this.playerPaddle.resetPosition();
+        this.aiPaddle.resetPosition();
+
+        this.score.reset();
+        this.isGameOver = false;
+        this.score.player1Name = this.matches[this.currentMatch][0];
+        this.score.player2Name = this.matches[this.currentMatch][1];
+        const directions = [
+            { x: 1, y: 0.5 },
+            { x: 1, y: -0.5 },
+            { x: -1, y: 0.5 },
+            { x: -1, y: -0.5 }
+        ];
+        this.ball.spawn(this.gameArea, directions);
+        this.loop();
     }
 
     loop() {
+        if (this.isGameOver) {
+            return;
+        }
         this.gameArea.clear(this.ctx);
-        this.drawTitle();
+        
+        if (this.ball.x < this.gameArea.gameX) {
+            this.score.incrementPlayer2Score();
+            const directions = [
+                { x: 1, y: 0.5 },
+                { x: 1, y: -0.5 }
+            ];
+            this.ball.spawn(this.gameArea, directions);
+        }
+        else if (this.ball.x + this.ball.size > this.gameArea.gameX + this.gameArea.gameWidth) {
+            this.score.incrementPlayer1Score();
+            const directions = [
+                { x: -1, y: 0.5 },
+                { x: -1, y: -0.5 }
+            ];
+            this.ball.spawn(this.gameArea, directions);
+        }
+        
         this.playerPaddle.move(this.gameArea);
         this.aiPaddle.move(this.gameArea);
         this.ball.move(this.gameArea, this.playerPaddle, this.aiPaddle, this.useAngleBounce);
+        
         this.gameArea.draw(this.ctx);
         this.playerPaddle.draw(this.ctx);
         this.aiPaddle.draw(this.ctx);
         this.ball.draw(this.ctx);
-        requestAnimationFrame(this.loop.bind(this));  // Appelle la fonction gameLoop avant le prochain repaint
+        this.game_over_screen();
+        this.score.drawTitle(this.gameTitle);
+        this.score.drawScore();
+        this.score.drawTournamentScore(this.wins, this.round, this.activePlayers);
+        requestAnimationFrame(this.loop.bind(this));
     }
 
-    drawTitle() {
-        this.ctx.font = `30px ${this.font.family}`;
-        this.ctx.fillStyle = 'white';
-        this.ctx.textAlign = 'center';
-        this.ctx.fillText(this.gameTitle, this.ctx.canvas.width / 2, 50);
+    game_over_screen() {
+        if (this.score.player1Score > this.maxScore) {
+            this.isGameOver = true;
+            this.score.drawEnd(1);
+            setTimeout(() => {
+                this.advanceTournament(this.score.player1Name);
+            }, 5000);
+        }
+        else if (this.score.player2Score > this.maxScore) {
+            this.isGameOver = true;
+            this.score.drawEnd(2);
+            setTimeout(() => {
+                this.advanceTournament(this.score.player2Name);
+            }, 5000);
+        }
     }
 
-    // Ajoutez des méthodes supplémentaires ici si nécessaire
+    advanceTournament(winner) {
+        this.wins[winner]++;
+        this.currentMatch++;
+
+        if (this.currentMatch < this.matches.length) {
+            this.startMatch();
+        } else {
+            this.setupNextRound();
+        }drawTournament
+    }
+
+    setupNextRound() {
+        let maxWins = Math.max(...Object.values(this.wins));
+        let topPlayers = Object.keys(this.wins).filter(player => this.wins[player] === maxWins);
+
+        if (topPlayers.length === 1) {
+            this.score.drawTournamentEnd(topPlayers[0]);
+            this.score.drawTournamentScore(this.wins, this.round, this.activePlayers);
+        } else {
+            this.matches = this.createAllMatches(topPlayers);
+            this.currentMatch = 0;
+            this.activePlayers = topPlayers;
+            this.round++;
+            this.startMatch();
+        }
+    }
 }
+
