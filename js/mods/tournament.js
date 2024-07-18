@@ -2,6 +2,7 @@ import { Paddle } from '../scenes/paddle.js';
 import { Ball } from '../scenes/ball.js';
 import { setupControls } from '../scenes/controls.js';
 import { Score } from '../scenes/score.js';
+import { waitForKeyPress } from '../scenes/assets.js';
 
 export class Tournament {
 
@@ -63,6 +64,7 @@ export class Tournament {
         // Initialiser le jeu
         setupControls(this.playerPaddle, this.aiPaddle);
         this.startMatch();
+
     }
 
     startMatch() {
@@ -73,7 +75,6 @@ export class Tournament {
 
         this.playerPaddle.resetPosition();
         this.aiPaddle.resetPosition();
-
         this.score.reset();
         this.isGameOver = false;
         this.score.player1Name = this.matches[this.currentMatch][0];
@@ -84,8 +85,24 @@ export class Tournament {
             { x: -1, y: 0.5 },
             { x: -1, y: -0.5 }
         ];
-        this.ball.spawn(this.gameArea, directions);
-        this.loop();
+
+        this.gameArea.clear(this.ctx);
+        this.gameArea.draw(this.ctx);
+        this.playerPaddle.draw(this.ctx);
+        this.aiPaddle.draw(this.ctx);
+        this.score.drawTitle(this.gameTitle);
+        this.score.drawSubtitle(this.gameSubtitle, this.maxScore + 1);
+        this.score.drawScore();
+        this.score.drawTournamentScore(this.wins, this.round, this.activePlayers);
+        
+        setTimeout(() => {
+            this.score.drawFlat("Press any key to start.", 30, 'white', 'center', this.ctx.canvas.width / 2, this.ctx.canvas.width / 2)
+            waitForKeyPress(() => {
+                this.ball.spawn(this.gameArea, directions);
+                this.loop();
+            });
+        }, 1000);
+
     }
 
     loop() {
@@ -132,15 +149,21 @@ export class Tournament {
             this.isGameOver = true;
             this.score.drawEnd(1);
             setTimeout(() => {
-                this.advanceTournament(this.score.player1Name);
-            }, 5000);
+                this.score.drawFlat("Press any key.", 20, 'white', 'center', this.ctx.canvas.width / 2, this.ctx.canvas.width / 2 + 50)
+                waitForKeyPress(() => {
+                    this.advanceTournament(this.score.player1Name);
+                });
+            }, 2000);
         }
         else if (this.score.player2Score > this.maxScore) {
             this.isGameOver = true;
             this.score.drawEnd(2);
             setTimeout(() => {
-                this.advanceTournament(this.score.player2Name);
-            }, 5000);
+                this.score.drawFlat("Press any key.", 20, 'white', 'center', this.ctx.canvas.width / 2, this.ctx.canvas.width / 2 + 50)
+                waitForKeyPress(() => {
+                    this.advanceTournament(this.score.player2Name);
+                });
+            }, 2000);
         }
     }
 
@@ -152,7 +175,7 @@ export class Tournament {
             this.startMatch();
         } else {
             this.setupNextRound();
-        }drawTournament
+        }
     }
 
     setupNextRound() {

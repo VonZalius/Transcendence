@@ -2,6 +2,7 @@ import { Paddle } from '../scenes/paddle.js';
 import { Ball } from '../scenes/ball.js';
 import { setupControls } from '../scenes/controls.js';
 import { Score } from '../scenes/score.js';
+import { waitForKeyPress } from '../scenes/assets.js';
 
 export class Versus {
 
@@ -28,14 +29,33 @@ export class Versus {
     main() {
         // Initialiser le jeu
         setupControls(this.playerPaddle, this.aiPaddle);
+
+        this.playerPaddle.resetPosition();
+        this.aiPaddle.resetPosition();
+        this.isGameOver = false;
+
         const directions = [
             { x: 1, y: 0.5 },
             { x: 1, y: -0.5 },
             { x: -1, y: 0.5 },
             { x: -1, y: -0.5 }
         ];
-        this.ball.spawn(this.gameArea, directions);
-        this.loop();
+
+        this.gameArea.clear(this.ctx);
+        this.gameArea.draw(this.ctx);
+        this.playerPaddle.draw(this.ctx);
+        this.aiPaddle.draw(this.ctx);
+        this.score.drawTitle(this.gameTitle);
+        this.score.drawSubtitle(this.gameSubtitle, this.maxScore + 1);
+        this.score.drawScore();
+
+        setTimeout(() => {
+            this.score.drawFlat("Press any key to start.", 30, 'white', 'center', this.ctx.canvas.width / 2, this.ctx.canvas.width / 2)
+            waitForKeyPress(() => {
+                this.ball.spawn(this.gameArea, directions);
+                this.loop();
+            });
+        }, 1000);
     }
 
     loop() {

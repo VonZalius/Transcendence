@@ -24,6 +24,27 @@ export class Score {
         this.player2Score = 0;
     }
 
+    drawFlat(text, px, color, align, x, y) {
+        this.ctx.font = `${px}px ${this.font.family}`;
+        this.ctx.fillStyle = color;
+        this.ctx.textAlign = align;
+        this.ctx.fillText(text, x, y);
+    }
+
+    drawTitle(gameTitle) {
+        this.ctx.font = `30px ${this.font.family}`;
+        this.ctx.fillStyle = 'white';
+        this.ctx.textAlign = 'center';
+        this.ctx.fillText(gameTitle, this.ctx.canvas.width / 2, 50);
+    }
+
+    drawSubtitle(gameSubtitle, maxScore) {
+        this.ctx.font = `20px ${this.font.family}`;
+        this.ctx.fillStyle = 'white';
+        this.ctx.textAlign = 'center';
+        this.ctx.fillText(gameSubtitle + maxScore, this.ctx.canvas.width / 2, 80);
+    }
+
     drawEnd(winningPLayer) {
         this.ctx.font = `30px ${this.font.family}`;
         this.ctx.fillStyle = 'white';
@@ -44,20 +65,6 @@ export class Score {
 
         // Afficher le nom et le score du joueur 2
         this.ctx.fillText(`${this.player2Name}: ${this.player2Score}`, (3 * this.ctx.canvas.width / 4), 120);
-    }
-
-    drawTitle(gameTitle) {
-        this.ctx.font = `30px ${this.font.family}`;
-        this.ctx.fillStyle = 'white';
-        this.ctx.textAlign = 'center';
-        this.ctx.fillText(gameTitle, this.ctx.canvas.width / 2, 50);
-    }
-
-    drawSubtitle(gameSubtitle, maxScore) {
-        this.ctx.font = `20px ${this.font.family}`;
-        this.ctx.fillStyle = 'white';
-        this.ctx.textAlign = 'center';
-        this.ctx.fillText(gameSubtitle + maxScore, this.ctx.canvas.width / 2, 80);
     }
 
     drawTournamentScore(wins, round, activePlayers) {

@@ -1,12 +1,9 @@
-import { Paddle } from './js/scenes/paddle.js';
-import { Ball } from './js/scenes/ball.js';
 import { GameArea } from './js/scenes/gameArea.js';
-import { setupControls } from './js/scenes/controls.js';
 import { loadFont } from './js/scenes/assets.js';
 import { Versus } from './js/mods/versus.js';
 import { Tournament } from './js/mods/tournament.js';
 
-let gameArea, playerPaddle, aiPaddle, ball, ctx, font, gameTitle;
+let gameArea, ctx, font;
 
 // Initialisation du jeu avec des paramètres
 function main(gameMode = "versus", playerNames = ["Player1", "Player2"]) {
@@ -23,8 +20,6 @@ function main(gameMode = "versus", playerNames = ["Player1", "Player2"]) {
         // Initialiser les paddles en fonction du mode de jeu
         if (gameMode === 'versus') {
             new Versus(gameArea, playerNames, ctx, font);
-            //({ playerPaddle, aiPaddle } = versusGame.initPaddles());
-            //gameTitle = "Versus Mode";
         } else if (gameMode === 'tournament') {
             new Tournament(gameArea, playerNames, ctx, font);
         }
@@ -39,7 +34,7 @@ function main(gameMode = "versus", playerNames = ["Player1", "Player2"]) {
 // Attendre que le DOM soit entièrement chargé avant de lancer le jeu
 document.addEventListener("DOMContentLoaded", () => {
     // Appel de la fonction main avec des paramètres par défaut ou spécifiés
-    main('tournament', ['Zalius', 'Spartan', 'Baptiste']);
+    main('versus', ['Zalius', 'Fenris']);
 });
 
 
