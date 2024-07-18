@@ -17,7 +17,9 @@ export class Versus {
         this.ball = new Ball(gameArea.gameX + gameArea.gameWidth / 2, gameArea.gameY + gameArea.gameHeight / 2, 10, 'white', 5);
 
         this.gameTitle = "Versus Mode"
+        this.gameSubtitle = "First to ";
         this.useAngleBounce = true
+        this.useAccelerate = true
         this.maxScore = 10;
 
         this.main();
@@ -63,7 +65,7 @@ export class Versus {
         
         this.playerPaddle.move(this.gameArea);
         this.aiPaddle.move(this.gameArea);
-        this.ball.move(this.gameArea, this.playerPaddle, this.aiPaddle, this.useAngleBounce);
+        this.ball.move(this.gameArea, this.playerPaddle, this.aiPaddle, this.useAngleBounce, this.useAccelerate);
         
         this.gameArea.draw(this.ctx);
         this.playerPaddle.draw(this.ctx);
@@ -71,6 +73,7 @@ export class Versus {
         this.ball.draw(this.ctx);
         this.game_over_screen();
         this.score.drawTitle(this.gameTitle);
+        this.score.drawSubtitle(this.gameSubtitle, this.maxScore + 1);
         this.score.drawScore();
         requestAnimationFrame(this.loop.bind(this));
     }

@@ -23,9 +23,11 @@ export class Tournament {
         this.wins = this.initializeWins(playerNames);
         this.activePlayers = playerNames.slice();
 
-        this.gameTitle = "Tournament Mode"
-        this.useAngleBounce = true
-        this.maxScore = 10;
+        this.gameTitle = "Tournament Mode";
+        this.gameSubtitle = "First to ";
+        this.useAngleBounce = true;
+        this.useAccelerate = true;
+        this.maxScore = 5;
 
 
         this.main();
@@ -111,7 +113,7 @@ export class Tournament {
         
         this.playerPaddle.move(this.gameArea);
         this.aiPaddle.move(this.gameArea);
-        this.ball.move(this.gameArea, this.playerPaddle, this.aiPaddle, this.useAngleBounce);
+        this.ball.move(this.gameArea, this.playerPaddle, this.aiPaddle, this.useAngleBounce, this.useAccelerate);
         
         this.gameArea.draw(this.ctx);
         this.playerPaddle.draw(this.ctx);
@@ -119,6 +121,7 @@ export class Tournament {
         this.ball.draw(this.ctx);
         this.game_over_screen();
         this.score.drawTitle(this.gameTitle);
+        this.score.drawSubtitle(this.gameSubtitle, this.maxScore + 1);
         this.score.drawScore();
         this.score.drawTournamentScore(this.wins, this.round, this.activePlayers);
         requestAnimationFrame(this.loop.bind(this));

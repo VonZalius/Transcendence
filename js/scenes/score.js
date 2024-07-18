@@ -53,6 +53,13 @@ export class Score {
         this.ctx.fillText(gameTitle, this.ctx.canvas.width / 2, 50);
     }
 
+    drawSubtitle(gameSubtitle, maxScore) {
+        this.ctx.font = `20px ${this.font.family}`;
+        this.ctx.fillStyle = 'white';
+        this.ctx.textAlign = 'center';
+        this.ctx.fillText(gameSubtitle + maxScore, this.ctx.canvas.width / 2, 80);
+    }
+
     drawTournamentScore(wins, round, activePlayers) {
         const startX = this.gameArea.gameX + this.gameArea.gameWidth / 2;
         let startY = this.gameArea.gameY + this.gameArea.gameHeight + 40;

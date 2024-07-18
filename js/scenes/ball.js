@@ -4,13 +4,15 @@ export class Ball {
         this.y = y;
         this.size = size;
         this.color = color;
-        this.speed = speed
+        this.baseSpeed = speed;
+        this.speed = speed;
         this.speedX = speed;
         this.speedY = speed;
+        this.accelerationFactor = 1;
         this.isMoving = false;
     }
 
-    move(gameArea, playerPaddle, aiPaddle, useAngleBounce) {
+    move(gameArea, playerPaddle, aiPaddle, useAngleBounce, useAccelerate) {
         if (this.isMoving) {
             this.x += this.speedX;
             this.y += this.speedY;
@@ -28,6 +30,8 @@ export class Ball {
                 this.y + this.size >= playerPaddle.y && 
                 this.y <= playerPaddle.y + playerPaddle.height
             ) {
+                if (useAccelerate)
+                    this.accelerate();
                 if (useAngleBounce) {
                     this.angleBounce(playerPaddle);
                 } else {
@@ -40,6 +44,8 @@ export class Ball {
                 this.y + this.size >= aiPaddle.y && 
                 this.y <= aiPaddle.y + aiPaddle.height
             ) {
+                if (useAccelerate)
+                    this.accelerate();
                 if (useAngleBounce) {
                     this.angleBounce(aiPaddle);
                 } else {
@@ -66,6 +72,7 @@ export class Ball {
         // Positionner la balle au centre
         this.x = gameArea.gameX + gameArea.gameWidth / 2;
         this.y = gameArea.gameY + gameArea.gameHeight / 2;
+        this.speed = this.baseSpeed;
 
         // Choisir une direction aléatoire parmi les directions fournies
         const randomDirection = directions[Math.floor(Math.random() * directions.length)];
@@ -79,6 +86,10 @@ export class Ball {
         setTimeout(() => {
             this.isMoving = true;
         }, 2000);
+    }
+
+    accelerate() {
+        this.speed += this.accelerationFactor;
     }
 
     draw(ctx) {
