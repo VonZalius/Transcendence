@@ -60,10 +60,7 @@ export class Score {
         this.ctx.fillStyle = 'white';
         this.ctx.textAlign = 'center';
 
-        // Afficher le nom et le score du joueur 1
         this.ctx.fillText(`${this.player1Name}: ${this.player1Score}`, this.ctx.canvas.width / 4, 120);
-
-        // Afficher le nom et le score du joueur 2
         this.ctx.fillText(`${this.player2Name}: ${this.player2Score}`, (3 * this.ctx.canvas.width / 4), 120);
     }
 

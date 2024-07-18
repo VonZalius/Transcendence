@@ -5,23 +5,22 @@ import { Tournament } from './js/mods/tournament.js';
 
 let gameArea, ctx, font;
 
-// Initialisation du jeu avec des paramètres
-function main(gameMode = "versus", playerNames = ["Player1", "Player2"]) {
+function main(gameMode, playerNames, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration) {
     // Sélectionner le canvas et le contexte
     const canvas = document.getElementById("webgl1");
     ctx = canvas.getContext("2d");
 
-    // Charger les ressources nécessaires (par exemple, les polices)
+    // Charger les ressources nécessaires
     loadFont().then((loadedFont) => {
         font = loadedFont;
         // Dimensions de la zone de jeu
         gameArea = new GameArea(800, 600, canvas);
 
-        // Initialiser les paddles en fonction du mode de jeu
+        // Initialiser les paddles
         if (gameMode === 'versus') {
-            new Versus(gameArea, playerNames, ctx, font);
+            new Versus(gameArea, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration);
         } else if (gameMode === 'tournament') {
-            new Tournament(gameArea, playerNames, ctx, font);
+            new Tournament(gameArea, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration);
         }
         else
             throw new Error('Unknown game mode: ' + gameMode + '. Available modes are: versus, tournament');
@@ -31,12 +30,12 @@ function main(gameMode = "versus", playerNames = ["Player1", "Player2"]) {
     });
 }
 
-// Attendre que le DOM soit entièrement chargé avant de lancer le jeu
 document.addEventListener("DOMContentLoaded", () => {
-    // Appel de la fonction main avec des paramètres par défaut ou spécifiés
-    main('versus', ['Zalius', 'Fenris']);
+    main('versus', ['Zalius', 'Fenris', 'Qwerty'], 10, 5, 100, true, 5, 1);
 });
 
+// Mode, [players], MaxScore, PaddleSpeed, PaddleSize, BounceMode, BallSpeed, BallAcceleration
+// 'versus', ['Zalius', 'Fenris'], 10, 5, 100, true, 5, 1
 
 
 

@@ -6,17 +6,17 @@ import { waitForKeyPress } from '../scenes/assets.js';
 
 export class Tournament {
 
-    constructor(gameArea, playerNames, ctx, font) {
+    constructor(gameArea, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration) {
         this.gameArea = gameArea;
         this.playerNames = playerNames;
         this.ctx = ctx;
         this.font = font;
         this.isGameOver = false;
 
-        this.playerPaddle = new Paddle(this.gameArea.gameX + 10, this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2, 10, 100, 'white');
-        this.aiPaddle = new Paddle(this.gameArea.gameX + this.gameArea.gameWidth - 20, this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2, 10, 100, 'white');
+        this.player1Paddle = new Paddle(this.gameArea.gameX + 10, this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2, paddleSize / 10, paddleSize, 'white', paddleSpeed);
+        this.player2Paddle = new Paddle(this.gameArea.gameX + this.gameArea.gameWidth - 20, this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2, paddleSize / 10, paddleSize, 'white', paddleSpeed);
         this.score = new Score(ctx, font, gameArea, playerNames[0], playerNames[1]);
-        this.ball = new Ball(gameArea.gameX + gameArea.gameWidth / 2, gameArea.gameY + gameArea.gameHeight / 2, 10, 'white', 5);
+        this.ball = new Ball(gameArea.gameX + gameArea.gameWidth / 2, gameArea.gameY + gameArea.gameHeight / 2, 10, 'white', ballSpeed, bounceMode, ballAcceleration);
 
         this.currentMatch = 0;
         this.round = 1;
@@ -28,7 +28,7 @@ export class Tournament {
         this.gameSubtitle = "First to ";
         this.useAngleBounce = true;
         this.useAccelerate = true;
-        this.maxScore = 5;
+        this.maxScore = maxScore - 1;
 
 
         this.main();
@@ -49,7 +49,7 @@ export class Tournament {
                 matches.push([playerNames[i], playerNames[j]]);
             }
         }
-        return this.shuffle(matches); // Mélanger les matchs pour obtenir un ordre aléatoire
+        return this.shuffle(matches); // Mélanger les matchs
     }
 
     shuffle(array) {
@@ -61,8 +61,7 @@ export class Tournament {
     }
 
     main() {
-        // Initialiser le jeu
-        setupControls(this.playerPaddle, this.aiPaddle);
+        setupControls(this.player1Paddle, this.player2Paddle);
         this.startMatch();
 
     }
@@ -73,8 +72,8 @@ export class Tournament {
             return;
         }
 
-        this.playerPaddle.resetPosition();
-        this.aiPaddle.resetPosition();
+        this.player1Paddle.resetPosition();
+        this.player2Paddle.resetPosition();
         this.score.reset();
         this.isGameOver = false;
         this.score.player1Name = this.matches[this.currentMatch][0];
@@ -88,8 +87,8 @@ export class Tournament {
 
         this.gameArea.clear(this.ctx);
         this.gameArea.draw(this.ctx);
-        this.playerPaddle.draw(this.ctx);
-        this.aiPaddle.draw(this.ctx);
+        this.player1Paddle.draw(this.ctx);
+        this.player2Paddle.draw(this.ctx);
         this.score.drawTitle(this.gameTitle);
         this.score.drawSubtitle(this.gameSubtitle, this.maxScore + 1);
         this.score.drawScore();
@@ -128,13 +127,13 @@ export class Tournament {
             this.ball.spawn(this.gameArea, directions);
         }
         
-        this.playerPaddle.move(this.gameArea);
-        this.aiPaddle.move(this.gameArea);
-        this.ball.move(this.gameArea, this.playerPaddle, this.aiPaddle, this.useAngleBounce, this.useAccelerate);
+        this.player1Paddle.move(this.gameArea);
+        this.player2Paddle.move(this.gameArea);
+        this.ball.move(this.gameArea, this.player1Paddle, this.player2Paddle, this.useAngleBounce, this.useAccelerate);
         
         this.gameArea.draw(this.ctx);
-        this.playerPaddle.draw(this.ctx);
-        this.aiPaddle.draw(this.ctx);
+        this.player1Paddle.draw(this.ctx);
+        this.player2Paddle.draw(this.ctx);
         this.ball.draw(this.ctx);
         this.game_over_screen();
         this.score.drawTitle(this.gameTitle);

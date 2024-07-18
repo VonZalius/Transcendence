@@ -1,5 +1,5 @@
 export class Ball {
-    constructor(x, y, size, color, speed) {
+    constructor(x, y, size, color, speed, bounceMode, ballAcceleration) {
         this.x = x;
         this.y = y;
         this.size = size;
@@ -8,11 +8,12 @@ export class Ball {
         this.speed = speed;
         this.speedX = speed;
         this.speedY = speed;
-        this.accelerationFactor = 1;
+        this.accelerationFactor = ballAcceleration;
         this.isMoving = false;
+        this.useAngleBounce = bounceMode;
     }
 
-    move(gameArea, playerPaddle, aiPaddle, useAngleBounce, useAccelerate) {
+    move(gameArea, playerPaddle, aiPaddle) {
         if (this.isMoving) {
             this.x += this.speedX;
             this.y += this.speedY;
@@ -30,12 +31,11 @@ export class Ball {
                 this.y + this.size >= playerPaddle.y && 
                 this.y <= playerPaddle.y + playerPaddle.height
             ) {
-                if (useAccelerate)
-                    this.accelerate();
-                if (useAngleBounce) {
+                this.accelerate();
+                if (this.useAngleBounce) {
                     this.angleBounce(playerPaddle);
                 } else {
-                    this.speedX = -this.speedX;
+                    this.speedX = this.speed;
                 }
             } else if (
                 this.speedX > 0 && // Balle se déplace vers la droite
@@ -44,12 +44,11 @@ export class Ball {
                 this.y + this.size >= aiPaddle.y && 
                 this.y <= aiPaddle.y + aiPaddle.height
             ) {
-                if (useAccelerate)
-                    this.accelerate();
-                if (useAngleBounce) {
+                this.accelerate();
+                if (this.useAngleBounce) {
                     this.angleBounce(aiPaddle);
                 } else {
-                    this.speedX = -this.speedX;
+                    this.speedX = -this.speed;
                 }
             }
         }

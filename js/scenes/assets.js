@@ -1,9 +1,9 @@
 export function loadFont() {
     return new Promise((resolve, reject) => {
-        // Simuler le chargement de la police
+        // Simuler le chargement de la police au cas ou faudrait vraiment unee police
         setTimeout(() => {
             console.log('Font loaded');
-            resolve({ family: 'Courier New' });  // Remplace 'Arial' par le nom de la police que vous chargez
+            resolve({ family: 'Courier New' });
         }, 1000);
     });
 }
@@ -11,7 +11,7 @@ export function loadFont() {
 export function waitForKeyPress(callback) {
     function onKeyPress(event) {
         document.removeEventListener('keydown', onKeyPress);
-        callback(event.key);  // Vous pouvez retourner la touche pressée si nécessaire
+        callback(event.key);
     }
     document.addEventListener('keydown', onKeyPress);
 }

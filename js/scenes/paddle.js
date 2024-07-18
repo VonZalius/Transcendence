@@ -1,5 +1,5 @@
 export class Paddle {
-    constructor(x, y, width, height, color) {
+    constructor(x, y, width, height, color, speed) {
         this.initialX = x;
         this.initialY = y;
         this.x = x;
@@ -7,7 +7,7 @@ export class Paddle {
         this.width = width;
         this.height = height;
         this.color = color;
-        this.speed = 5;
+        this.speed = speed;
         this.up = false;
         this.down = false;
     }
