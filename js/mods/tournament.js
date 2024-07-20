@@ -6,17 +6,18 @@ import { waitForKeyPress } from '../scenes/assets.js';
 
 export class Tournament {
 
-    constructor(gameArea, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration) {
+    constructor(gameArea, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls) {
         this.gameArea = gameArea;
         this.playerNames = playerNames;
         this.ctx = ctx;
         this.font = font;
         this.isGameOver = false;
+        this.balls = [];
 
         this.player1Paddle = new Paddle(this.gameArea.gameX + 10, this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2, paddleSize / 10, paddleSize, 'white', paddleSpeed);
         this.player2Paddle = new Paddle(this.gameArea.gameX + this.gameArea.gameWidth - 20, this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2, paddleSize / 10, paddleSize, 'white', paddleSpeed);
         this.score = new Score(ctx, font, gameArea, playerNames[0], playerNames[1]);
-        this.ball = new Ball(gameArea.gameX + gameArea.gameWidth / 2, gameArea.gameY + gameArea.gameHeight / 2, 10, 'white', ballSpeed, bounceMode, ballAcceleration);
+        this.initBalls(numBalls, ballSpeed, bounceMode, ballAcceleration);
 
         this.currentMatch = 0;
         this.round = 1;
@@ -26,10 +27,7 @@ export class Tournament {
 
         this.gameTitle = "Tournament Mode";
         this.gameSubtitle = "First to ";
-        this.useAngleBounce = true;
-        this.useAccelerate = true;
         this.maxScore = maxScore - 1;
-
 
         this.main();
     }
@@ -60,10 +58,20 @@ export class Tournament {
         return array;
     }
 
+    initBalls(numBalls, ballSpeed, bounceMode, ballAcceleration) {
+        const centerX = this.gameArea.gameX + this.gameArea.gameWidth / 2;
+        const centerY = this.gameArea.gameY + this.gameArea.gameHeight / 2;
+        const spacing = 15; // Espace entre les balles
+
+        for (let i = 0; i < numBalls; i++) {
+            const yOffset = Math.pow(-1, i) * Math.ceil(i / 2) * spacing;
+            this.balls.push(new Ball(centerX, centerY + yOffset, 10, 'white', ballSpeed, bounceMode, ballAcceleration, yOffset));
+        }
+    }
+
     main() {
         setupControls(this.player1Paddle, this.player2Paddle);
         this.startMatch();
-
     }
 
     startMatch() {
@@ -97,11 +105,10 @@ export class Tournament {
         setTimeout(() => {
             this.score.drawFlat("Press any key to start.", 30, 'white', 'center', this.ctx.canvas.width / 2, this.ctx.canvas.width / 2)
             waitForKeyPress(() => {
-                this.ball.spawn(this.gameArea, directions);
+                this.balls.forEach(ball => ball.spawn(this.gameArea, directions));
                 this.loop();
             });
         }, 1000);
-
     }
 
     loop() {
@@ -110,31 +117,33 @@ export class Tournament {
         }
         this.gameArea.clear(this.ctx);
         
-        if (this.ball.x < this.gameArea.gameX) {
-            this.score.incrementPlayer2Score();
-            const directions = [
-                { x: 1, y: 0.5 },
-                { x: 1, y: -0.5 }
-            ];
-            this.ball.spawn(this.gameArea, directions);
-        }
-        else if (this.ball.x + this.ball.size > this.gameArea.gameX + this.gameArea.gameWidth) {
-            this.score.incrementPlayer1Score();
-            const directions = [
-                { x: -1, y: 0.5 },
-                { x: -1, y: -0.5 }
-            ];
-            this.ball.spawn(this.gameArea, directions);
-        }
-        
+        this.balls.forEach(ball => {
+            if (ball.x < this.gameArea.gameX) {
+                this.score.incrementPlayer2Score();
+                const directions = [
+                    { x: 1, y: 0.5 },
+                    { x: 1, y: -0.5 }
+                ];
+                ball.spawn(this.gameArea, directions);
+            } else if (ball.x + ball.size > this.gameArea.gameX + this.gameArea.gameWidth) {
+                this.score.incrementPlayer1Score();
+                const directions = [
+                    { x: -1, y: 0.5 },
+                    { x: -1, y: -0.5 }
+                ];
+                ball.spawn(this.gameArea, directions);
+            }
+
+            ball.move(this.gameArea, [this.player1Paddle, this.player2Paddle], this.useAngleBounce, this.useAccelerate);
+        });
+
         this.player1Paddle.move(this.gameArea);
         this.player2Paddle.move(this.gameArea);
-        this.ball.move(this.gameArea, this.player1Paddle, this.player2Paddle, this.useAngleBounce, this.useAccelerate);
         
         this.gameArea.draw(this.ctx);
         this.player1Paddle.draw(this.ctx);
         this.player2Paddle.draw(this.ctx);
-        this.ball.draw(this.ctx);
+        this.balls.forEach(ball => ball.draw(this.ctx));
         this.game_over_screen();
         this.score.drawTitle(this.gameTitle);
         this.score.drawSubtitle(this.gameSubtitle, this.maxScore + 1);
@@ -193,4 +202,5 @@ export class Tournament {
         }
     }
 }
+
 

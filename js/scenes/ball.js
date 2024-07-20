@@ -1,5 +1,5 @@
 export class Ball {
-    constructor(x, y, size, color, speed, bounceMode, ballAcceleration) {
+    constructor(x, y, size, color, speed, bounceMode, ballAcceleration, spacing) {
         this.x = x;
         this.y = y;
         this.size = size;
@@ -11,9 +11,10 @@ export class Ball {
         this.accelerationFactor = ballAcceleration;
         this.isMoving = false;
         this.useAngleBounce = bounceMode;
+        this.spacing = spacing
     }
 
-    move(gameArea, playerPaddle, aiPaddle) {
+    move(gameArea, paddles) {
         if (this.isMoving) {
             this.x += this.speedX;
             this.y += this.speedY;
@@ -24,33 +25,35 @@ export class Ball {
             }
 
             // Rebondir sur les paddles
-            if (
-                this.speedX < 0 && // Balle se déplace vers la gauche
-                this.x <= playerPaddle.x + playerPaddle.width && 
-                this.x + this.size >= playerPaddle.x && 
-                this.y + this.size >= playerPaddle.y && 
-                this.y <= playerPaddle.y + playerPaddle.height
-            ) {
-                this.accelerate();
-                if (this.useAngleBounce) {
-                    this.angleBounce(playerPaddle);
-                } else {
-                    this.speedX = this.speed;
+            paddles.forEach(paddle => {
+                if (
+                    this.speedX < 0 && // Balle se déplace vers la gauche
+                    this.x <= paddle.x + paddle.width && 
+                    this.x + this.size >= paddle.x && 
+                    this.y + this.size >= paddle.y && 
+                    this.y <= paddle.y + paddle.height
+                ) {
+                    this.accelerate();
+                    if (this.useAngleBounce) {
+                        this.angleBounce(paddle);
+                    } else {
+                        this.speedX = this.speed;
+                    }
+                } else if (
+                    this.speedX > 0 && // Balle se déplace vers la droite
+                    this.x + this.size >= paddle.x && 
+                    this.x <= paddle.x + paddle.width && 
+                    this.y + this.size >= paddle.y && 
+                    this.y <= paddle.y + paddle.height
+                ) {
+                    this.accelerate();
+                    if (this.useAngleBounce) {
+                        this.angleBounce(paddle);
+                    } else {
+                        this.speedX = -this.speed;
+                    }
                 }
-            } else if (
-                this.speedX > 0 && // Balle se déplace vers la droite
-                this.x + this.size >= aiPaddle.x && 
-                this.x <= aiPaddle.x + aiPaddle.width && 
-                this.y + this.size >= aiPaddle.y && 
-                this.y <= aiPaddle.y + aiPaddle.height
-            ) {
-                this.accelerate();
-                if (this.useAngleBounce) {
-                    this.angleBounce(aiPaddle);
-                } else {
-                    this.speedX = -this.speed;
-                }
-            }
+            });
         }
     }
 
@@ -70,7 +73,7 @@ export class Ball {
     spawn(gameArea, directions) {
         // Positionner la balle au centre
         this.x = gameArea.gameX + gameArea.gameWidth / 2;
-        this.y = gameArea.gameY + gameArea.gameHeight / 2;
+        this.y = gameArea.gameY + gameArea.gameHeight / 2 + this.spacing;
         this.speed = this.baseSpeed;
 
         // Choisir une direction aléatoire parmi les directions fournies
