@@ -46,7 +46,7 @@ function main(gameMode, playerNames, maxScore, paddleSpeed, paddleSize, bounceMo
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    main('versus', ['Zalius', 'Dani'], 10, 5, 100, true, 5, 1, 3);
+    main('versus', ['Zalius', 'Dani', 'Tida', 'Qwerty'], 10, 5, 100, true, 5, 1, 1);
 });
 
 // Mode, [players], MaxScore, PaddleSpeed, PaddleSize, BounceMode, BallSpeed, BallAcceleration, numBalls

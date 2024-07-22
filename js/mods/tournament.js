@@ -33,8 +33,8 @@ export class Tournament {
             right: 'pass'
         };
         
-        this.player1Paddle = new Paddle(this.gameArea.gameX + 10, this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2, paddleSize / 10, paddleSize, 'white', paddleSpeed, 'vertical');
-        this.player2Paddle = new Paddle(this.gameArea.gameX + this.gameArea.gameWidth - 20, this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2, paddleSize / 10, paddleSize, 'white', paddleSpeed, 'vertical');
+        this.player1Paddle = new Paddle(this.gameArea.gameX + 10, this.gameArea.gameY + (this.gameArea.gameHeight - paddleSize) / 2, paddleSize / 10, paddleSize, 'white', paddleSpeed, 'vertical');
+        this.player2Paddle = new Paddle(this.gameArea.gameX + this.gameArea.gameWidth - 20, this.gameArea.gameY + (this.gameArea.gameHeight - paddleSize) / 2, paddleSize / 10, paddleSize, 'white', paddleSpeed, 'vertical');
         this.initBalls(numBalls, ballSpeed, bounceMode, ballAcceleration);
         this.main();
     }

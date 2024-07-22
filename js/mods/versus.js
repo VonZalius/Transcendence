@@ -42,10 +42,10 @@ export class Versus {
 
     initPaddles(playerNames, paddleSize, paddleSpeed) {
         const positions = [
-            { x: this.gameArea.gameX + 10, y: this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2 },
-            { x: this.gameArea.gameX + this.gameArea.gameWidth - 20, y: this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2 },
-            { x: this.gameArea.gameX + 30, y: this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2 },
-            { x: this.gameArea.gameX + this.gameArea.gameWidth - 40, y: this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2 }
+            { x: this.gameArea.gameX + 10, y: this.gameArea.gameY + (this.gameArea.gameHeight - paddleSize) / 2 },
+            { x: this.gameArea.gameX + this.gameArea.gameWidth - 20, y: this.gameArea.gameY + (this.gameArea.gameHeight - paddleSize) / 2 },
+            { x: this.gameArea.gameX + 30, y: this.gameArea.gameY + (this.gameArea.gameHeight - paddleSize) / 2 },
+            { x: this.gameArea.gameX + this.gameArea.gameWidth - 40, y: this.gameArea.gameY + (this.gameArea.gameHeight - paddleSize) / 2 }
         ];
 
         for (let i = 0; i < playerNames.length; i++) {

@@ -53,10 +53,10 @@ export class LastManStanding {
 
     initPaddles(playerNames, paddleSize, paddleSpeed) {
         const positions = [
-            { x: this.gameArea.gameX + 10, y: this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2, angle: 'vertical' },
-            { x: this.gameArea.gameX + this.gameArea.gameWidth - 20, y: this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2, angle: 'vertical' },
-            { x: this.gameArea.gameX + (this.gameArea.gameWidth - 100) / 2, y: this.gameArea.gameY + 10, angle: 'horizontal' },
-            { x: this.gameArea.gameX + (this.gameArea.gameWidth - 100) / 2, y: this.gameArea.gameY + this.gameArea.gameHeight - 20, angle: 'horizontal' }
+            { x: this.gameArea.gameX + 10, y: this.gameArea.gameY + (this.gameArea.gameHeight - paddleSize) / 2, angle: 'vertical' },
+            { x: this.gameArea.gameX + this.gameArea.gameWidth - 20, y: this.gameArea.gameY + (this.gameArea.gameHeight - paddleSize) / 2, angle: 'vertical' },
+            { x: this.gameArea.gameX + (this.gameArea.gameWidth - paddleSize) / 2, y: this.gameArea.gameY + 10, angle: 'horizontal' },
+            { x: this.gameArea.gameX + (this.gameArea.gameWidth - paddleSize) / 2, y: this.gameArea.gameY + this.gameArea.gameHeight - 20, angle: 'horizontal' }
         ];
 
         for (let i = 0; i < playerNames.length; i++) {
