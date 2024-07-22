@@ -24,12 +24,26 @@ export class Score {
         this.player2Score = 0;
     }
 
-    drawFlat(text, px, color, align, x, y) {
+    drawFlat(text, px, color, align, x, y, angle = 0) {
+        this.ctx.save(); // Sauvegarder l'état actuel du contexte
+    
+        // Définir les propriétés du texte
         this.ctx.font = `${px}px ${this.font.family}`;
         this.ctx.fillStyle = color;
         this.ctx.textAlign = align;
-        this.ctx.fillText(text, x, y);
+    
+        // Déplacer le contexte au point (x, y)
+        this.ctx.translate(x, y);
+    
+        // Appliquer la rotation
+        this.ctx.rotate(angle * Math.PI / 180);
+    
+        // Dessiner le texte à l'origine (0, 0) car le contexte est déjà déplacé
+        this.ctx.fillText(text, 0, 0);
+    
+        this.ctx.restore(); // Restaurer l'état initial du contexte
     }
+    
 
     drawTitle(gameTitle) {
         this.ctx.font = `30px ${this.font.family}`;

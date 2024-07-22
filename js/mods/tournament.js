@@ -1,3 +1,4 @@
+import { GameArea } from '../scenes/gameArea.js';
 import { Paddle } from '../scenes/paddle.js';
 import { Ball } from '../scenes/ball.js';
 import { setupControls } from '../scenes/controls.js';
@@ -6,29 +7,35 @@ import { waitForKeyPress } from '../scenes/assets.js';
 
 export class Tournament {
 
-    constructor(gameArea, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls) {
-        this.gameArea = gameArea;
+    constructor(canvas, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls) {
+        this.gameArea = new GameArea(800, 600, canvas);
         this.playerNames = playerNames;
         this.ctx = ctx;
         this.font = font;
         this.isGameOver = false;
         this.balls = [];
 
-        this.player1Paddle = new Paddle(this.gameArea.gameX + 10, this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2, paddleSize / 10, paddleSize, 'white', paddleSpeed);
-        this.player2Paddle = new Paddle(this.gameArea.gameX + this.gameArea.gameWidth - 20, this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2, paddleSize / 10, paddleSize, 'white', paddleSpeed);
-        this.score = new Score(ctx, font, gameArea, playerNames[0], playerNames[1]);
-        this.initBalls(numBalls, ballSpeed, bounceMode, ballAcceleration);
-
+        this.score = new Score(ctx, font, this.gameArea, playerNames[0], playerNames[1]);
+        
         this.currentMatch = 0;
         this.round = 1;
         this.matches = this.createAllMatches(playerNames);
         this.wins = this.initializeWins(playerNames);
         this.activePlayers = playerNames.slice();
-
+        
         this.gameTitle = "Tournament Mode";
         this.gameSubtitle = "First to ";
         this.maxScore = maxScore - 1;
-
+        this.walls = {
+            top: 'bounce',
+            bottom: 'bounce',
+            left: 'pass',
+            right: 'pass'
+        };
+        
+        this.player1Paddle = new Paddle(this.gameArea.gameX + 10, this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2, paddleSize / 10, paddleSize, 'white', paddleSpeed, 'vertical');
+        this.player2Paddle = new Paddle(this.gameArea.gameX + this.gameArea.gameWidth - 20, this.gameArea.gameY + (this.gameArea.gameHeight - 100) / 2, paddleSize / 10, paddleSize, 'white', paddleSpeed, 'vertical');
+        this.initBalls(numBalls, ballSpeed, bounceMode, ballAcceleration);
         this.main();
     }
 
@@ -65,7 +72,7 @@ export class Tournament {
 
         for (let i = 0; i < numBalls; i++) {
             const yOffset = Math.pow(-1, i) * Math.ceil(i / 2) * spacing;
-            this.balls.push(new Ball(centerX, centerY + yOffset, 10, 'white', ballSpeed, bounceMode, ballAcceleration, yOffset));
+            this.balls.push(new Ball(centerX, centerY + yOffset, 10, 'white', ballSpeed, bounceMode, ballAcceleration, yOffset, this.walls));
         }
     }
 

@@ -1,4 +1,4 @@
-
+import { GameArea } from '../scenes/gameArea.js';
 import { Paddle } from '../scenes/paddle.js';
 import { Ball } from '../scenes/ball.js';
 import { setupControls } from '../scenes/controls.js';
@@ -7,26 +7,36 @@ import { waitForKeyPress } from '../scenes/assets.js';
 
 export class Versus {
 
-    constructor(gameArea, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls) {
-        this.gameArea = gameArea;
+    constructor(canvas, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls) {
+        this.gameArea = new GameArea(800, 600, canvas);
         this.playerNames = playerNames;
         this.ctx = ctx;
         this.isGameOver = false;
         this.paddles = [];
         this.balls = [];
 
-        this.initPaddles(playerNames, paddleSize, paddleSpeed);
-        this.initBalls(numBalls, ballSpeed, bounceMode, ballAcceleration);
+        
+        let team1Names = `${playerNames[0]}`;
+        let team2Names = `${playerNames[1]}`;
+        if (playerNames.length == 4) {
+            team1Names = `${playerNames[0]} & ${playerNames[1]}`;
+            team2Names = `${playerNames[2]} & ${playerNames[3]}`;
+        }
 
-        const team1Names = `${playerNames[0]} & ${playerNames[2]}`;
-        const team2Names = `${playerNames[1]} & ${playerNames[3]}`;
-
-        this.score = new Score(ctx, font, gameArea, team1Names, team2Names);
+        this.score = new Score(ctx, font, this.gameArea, team1Names, team2Names);
 
         this.gameTitle = "Versus Mode"
         this.gameSubtitle = "First to ";
         this.maxScore = maxScore - 1;
+        this.walls = {
+            top: 'bounce',
+            bottom: 'bounce',
+            left: 'pass',
+            right: 'pass'
+        };
 
+        this.initPaddles(playerNames, paddleSize, paddleSpeed);
+        this.initBalls(numBalls, ballSpeed, bounceMode, ballAcceleration);
         this.main();
     }
 
@@ -40,7 +50,7 @@ export class Versus {
 
         for (let i = 0; i < playerNames.length; i++) {
             const pos = positions[i];
-            this.paddles.push(new Paddle(pos.x, pos.y, paddleSize / 10, paddleSize, 'white', paddleSpeed));
+            this.paddles.push(new Paddle(pos.x, pos.y, paddleSize / 10, paddleSize, 'white', paddleSpeed, 'vertical'));
         }
     }
 
@@ -51,7 +61,7 @@ export class Versus {
 
         for (let i = 0; i < numBalls; i++) {
             const yOffset = Math.pow(-1, i) * Math.ceil(i / 2) * spacing;
-            this.balls.push(new Ball(centerX, centerY + yOffset, 10, 'white', ballSpeed, bounceMode, ballAcceleration, yOffset));
+            this.balls.push(new Ball(centerX, centerY + yOffset, 10, 'white', ballSpeed, bounceMode, ballAcceleration, yOffset, this.walls));
         }
     }
 
