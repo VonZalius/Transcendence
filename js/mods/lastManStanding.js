@@ -25,9 +25,13 @@ export class LastManStanding {
         this.player3Score = playerNames[2] ? maxScore : null;
         this.player4Score = playerNames[3] ? maxScore : null;
 
+        this.isThereAPlayer3 = playerNames[2] ? true : false;
+        this.isThereAPlayer4 = playerNames[3] ? true : false;
+
+
         this.initWalls(playerNames.length);
 
-        this.score = new Score(ctx, font, this.gameArea, `${playerNames[0]}`, `${playerNames[1]}`);
+        this.score = new Score(ctx, font, this.gameArea, `${playerNames[0]}`, `${playerNames[1]}`, `${playerNames[2]}`, `${playerNames[3]}`);
 
         this.gameTitle = "Last Man Standing Mode"
         this.gameSubtitle = "Number of lives : ";
@@ -174,6 +178,8 @@ export class LastManStanding {
             ball.move(this.gameArea, this.paddles);
         });
 
+        this.check_all_status();
+
         this.moveAllPaddles();
         this.gameArea.draw(this.ctx);
         this.drawAllPaddles();
@@ -197,49 +203,57 @@ export class LastManStanding {
         this.paddles.forEach(paddle => paddle.draw(this.ctx));
     }
 
-    game_over_screen() {
-        /*const scores = [this.player1Score, this.player2Score, this.player3Score, this.player4Score].filter(score => score !== null);
-        const maxScore = Math.max(...scores);
-        if (maxScore == 0) {
-            this.isGameOver = true;
-            const winnerIndex = scores.indexOf(maxScore);
-            this.score.drawEnd(winnerIndex + 1);
-        }*/
+    check_all_status() {
+        if (this.player1Score < 0)
+            this.player1Score = 0;
+        if (this.player2Score < 0)
+            this.player2Score = 0;
+        if (this.isThereAPlayer3 && this.player3Score < 0)
+            this.player3Score = 0;
+        if (this.isThereAPlayer4 && this.player4Score < 0)
+            this.player4Score = 0;
+
+
+        if (this.player1Score <= 0) {
+            this.walls.left = 'bounce';
+             const player1Paddle = this.paddles[0];
+             player1Paddle.x = 9999;
+             player1Paddle.y = 9999;
+             player1Paddle.speed = 0;
+         }
+         if (this.player2Score <= 0) {
+             this.walls.right = 'bounce';
+             const player2Paddle = this.paddles[1];
+             player2Paddle.x = 9999;
+             player2Paddle.y = 9999;
+             player2Paddle.speed = 0;
+         }
+         if (this.isThereAPlayer3 && this.player3Score <= 0) {
+             this.walls.top = 'bounce';
+             const player3Paddle = this.paddles[2];
+             player3Paddle.x = 9999;
+             player3Paddle.y = 9999;
+             player3Paddle.speed = 0;
+         }
+         if (this.isThereAPlayer4 && this.player4Score <= 0) {
+             this.walls.bottom = 'bounce';
+             const player4Paddle = this.paddles[3];
+             player4Paddle.x = 9999;
+             player4Paddle.y = 9999;
+             player4Paddle.speed = 0;
+         }
+    }
+
+    game_over_screen() {      
         const scores = [this.player1Score, this.player2Score, this.player3Score, this.player4Score].filter(score => score !== null && score > 0);
         if (scores.length === 1) {
             this.isGameOver = true;
             const winnerIndex = [this.player1Score, this.player2Score, this.player3Score, this.player4Score].indexOf(scores[0]);
             this.score.drawEnd(winnerIndex + 1);
         }
-
-        if (this.player1Score <= 0) {
-            this.walls.left = 'bounce';
-            const player1Paddle = this.paddles[0];
-            player1Paddle.x = 9999;
-            player1Paddle.y = 9999;
-            player1Paddle.speed = 0;
+        if (scores.length === 0) {
+            this.isGameOver = true;
+            this.score.drawEnd(0);
         }
-        if (this.player2Score <= 0) {
-            this.walls.right = 'bounce';
-            const player2Paddle = this.paddles[1];
-            player2Paddle.x = 9999;
-            player2Paddle.y = 9999;
-            player2Paddle.speed = 0;
-        }
-        if (this.player3Score && this.player3Score <= 0) {
-            this.walls.top = 'bounce';
-            const player3Paddle = this.paddles[2];
-            player3Paddle.x = 9999;
-            player3Paddle.y = 9999;
-            player3Paddle.speed = 0;
-        }
-        if (this.player4Score && this.player4Score <= 0) {
-            this.walls.bottom = 'bounce';
-            const player4Paddle = this.paddles[3];
-            player4Paddle.x = 9999;
-            player4Paddle.y = 9999;
-            player4Paddle.speed = 0;
-        }
-
     }
 }
