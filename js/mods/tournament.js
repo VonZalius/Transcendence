@@ -14,6 +14,7 @@ export class Tournament {
         this.font = font;
         this.isGameOver = false;
         this.balls = [];
+        this.bricks = [];
 
         this.score = new Score(ctx, font, this.gameArea, playerNames[0], playerNames[1]);
         
@@ -141,7 +142,7 @@ export class Tournament {
                 ball.spawn(this.gameArea, directions);
             }
 
-            ball.move(this.gameArea, [this.player1Paddle, this.player2Paddle], this.useAngleBounce, this.useAccelerate);
+            ball.move(this.gameArea, [this.player1Paddle, this.player2Paddle], this.bricks);
         });
 
         this.player1Paddle.move(this.gameArea);

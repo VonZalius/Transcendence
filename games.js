@@ -2,6 +2,7 @@ import { loadFont } from './js/scenes/assets.js';
 import { Versus } from './js/mods/versus.js';
 import { Tournament } from './js/mods/tournament.js';
 import { LastManStanding } from './js/mods/lastManStanding.js';
+import { BrickBreaker } from './js/mods/brickBreaker.js';
 
 let ctx, font;
 
@@ -14,7 +15,7 @@ function main(gameMode, playerNames, maxScore, paddleSpeed, paddleSize, bounceMo
     loadFont().then((loadedFont) => {
         font = loadedFont;
 
-        maxScore = Math.max(1, Math.min(maxScore, 50));
+        maxScore = Math.max(1, Math.min(maxScore, 100));
         paddleSpeed = Math.max(1, Math.min(paddleSpeed, 30));
         paddleSize = Math.max(20, Math.min(paddleSize, 150));
         ballSpeed = Math.max(1, Math.min(ballSpeed, 10));
@@ -36,9 +37,13 @@ function main(gameMode, playerNames, maxScore, paddleSpeed, paddleSize, bounceMo
             if (playerNames.length > 4)
                 throw new Error('Not a good players count: ' + playerNames.length + '. Last Man Standing mod take 2, 3 or 4 players.');
             new LastManStanding(canvas, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls);
+        } else if (gameMode === 'brickBreaker') {
+            if (playerNames.length == 3 || playerNames.length > 4)
+                throw new Error('Not a good players count: ' + playerNames.length + '. Bricks mod take 1 or 2 players.');
+            new BrickBreaker(canvas, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls);
         }
         else
-            throw new Error('Unknown game mode: ' + gameMode + '. Available modes are: versus, tournament, lastManStanding.');
+            throw new Error('Unknown game mode: ' + gameMode + '. Available modes are: versus, tournament, lastManStanding, brickBreaker.');
 
     }).catch((error) => {
         console.error('Error loading assets:', error);
@@ -46,7 +51,7 @@ function main(gameMode, playerNames, maxScore, paddleSpeed, paddleSize, bounceMo
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    main('versus', ['Zalius', 'Dani', 'Tida', 'Qwerty'], 10, 5, 100, true, 5, 1, 1);
+    main('versus', ['Adri', 'Dani'], 10, 5, 100, true, 5, 1, 1);
 });
 
 // Mode, [players], MaxScore, PaddleSpeed, PaddleSize, BounceMode, BallSpeed, BallAcceleration, numBalls

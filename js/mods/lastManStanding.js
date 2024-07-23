@@ -14,6 +14,7 @@ export class LastManStanding {
         this.isGameOver = false;
         this.paddles = [];
         this.balls = [];
+        this.bricks = [];
 
         this.player1Name = `${playerNames[0]}`;
         this.player2Name = `${playerNames[1]}`;
@@ -175,7 +176,7 @@ export class LastManStanding {
                 ];
                 ball.spawn(this.gameArea, directions);
             }
-            ball.move(this.gameArea, this.paddles);
+            ball.move(this.gameArea, this.paddles, this.bricks);
         });
 
         this.check_all_status();

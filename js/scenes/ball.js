@@ -117,7 +117,8 @@ export class Ball {
         this.wallBehavior = wallBehavior; // { top: 'bounce', bottom: 'bounce', left: 'pass', right: 'pass' }
     }
 
-    move(gameArea, paddles) {
+    move(gameArea, paddles, bricks) {
+        let returnValue = false;
         if (this.isMoving) {
             this.x += this.speedX;
             this.y += this.speedY;
@@ -202,7 +203,21 @@ export class Ball {
                 }
                 
             });
+
+            // Rebondir sur les briques
+            bricks.forEach(brick => {
+                if (brick.checkCollision(this)) {
+                    if (this.x < brick.x || this.x + this.size > brick.x + brick.width) {
+                        this.speedX = -this.speedX;
+                    }
+                    if (this.y < brick.y || this.y + this.size > brick.y + brick.height) {
+                        this.speedY = -this.speedY;
+                    }
+                    returnValue = true;
+                }
+            });
         }
+        return (returnValue);
     }
 
     angleBounceY(paddle) {
