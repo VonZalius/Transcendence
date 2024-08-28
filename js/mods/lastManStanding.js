@@ -4,10 +4,14 @@ import { Ball } from '../scenes/ball.js';
 import { setupControls } from '../scenes/controls.js';
 import { Score } from '../scenes/score.js';
 import { waitForKeyPress } from '../scenes/assets.js';
+import { map1 } from '../scenes/maps/LMS.js';
+import { map2 } from '../scenes/maps/LMS.js';
+import { map3 } from '../scenes/maps/LMS.js';
+import { map4 } from '../scenes/maps/LMS.js';
 
 export class LastManStanding {
 
-    constructor(canvas, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls) {
+    constructor(canvas, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls, map) {
         this.gameArea = new GameArea(700, 700, canvas);
         this.playerNames = playerNames;
         this.ctx = ctx;
@@ -15,6 +19,9 @@ export class LastManStanding {
         this.paddles = [];
         this.balls = [];
         this.bricks = [];
+        this.bricks = [];
+        this.bricksX = 60;
+        this.bricksY = 60;
 
         this.player1Name = `${playerNames[0]}`;
         this.player2Name = `${playerNames[1]}`;
@@ -37,6 +44,17 @@ export class LastManStanding {
         this.gameTitle = "Last Man Standing Mode"
         this.gameSubtitle = "Number of lives : ";
         this.maxScore = maxScore - 1;
+
+        if (map == 1)
+            this.bricks = [];
+        else if (map == 2)
+            this.bricks = map1(this.gameArea, this.bricksX, this.bricksY);
+        else if (map == 3)
+            this.bricks = map2(this.gameArea, this.bricksX, this.bricksY);
+        else if (map == 4)
+            this.bricks = map3(this.gameArea, this.bricksX, this.bricksY);
+        else if (map == 5)
+            this.bricks = map4(this.gameArea, this.bricksX, this.bricksY);
 
         this.initPaddles(playerNames, paddleSize, paddleSpeed);
         this.initBalls(numBalls, ballSpeed, bounceMode, ballAcceleration);
@@ -98,6 +116,7 @@ export class LastManStanding {
         this.gameArea.clear(this.ctx);
         this.gameArea.draw(this.ctx);
         this.drawAllPaddles();
+        this.bricks.forEach(brick => brick.draw(this.ctx));
         this.score.drawTitle(this.gameTitle);
         this.score.drawSubtitle(this.gameSubtitle, this.maxScore + 1);
         this.drawScores();
@@ -185,6 +204,7 @@ export class LastManStanding {
         this.gameArea.draw(this.ctx);
         this.drawAllPaddles();
         this.balls.forEach(ball => ball.draw(this.ctx));
+        this.bricks.forEach(brick => brick.draw(this.ctx));
         this.game_over_screen();
         this.score.drawTitle(this.gameTitle);
         this.score.drawSubtitle(this.gameSubtitle, this.maxScore + 1);

@@ -4,11 +4,15 @@ import { Ball } from '../scenes/ball.js';
 import { setupControls } from '../scenes/controls.js';
 import { Score } from '../scenes/score.js';
 import { waitForKeyPress } from '../scenes/assets.js';
-import { map1 } from '../scenes/bBMaps.js';
+import { map1 } from '../scenes/maps/BB.js';
+import { map2 } from '../scenes/maps/BB.js';
+import { map3 } from '../scenes/maps/BB.js';
+import { map4 } from '../scenes/maps/BB.js';
+import { map5 } from '../scenes/maps/BB.js';
 
 export class BrickBreaker {
 
-    constructor(canvas, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls) {
+    constructor(canvas, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls, map) {
         this.gameArea = new GameArea(400, 700, canvas, -250);
         this.gameArea2 = new GameArea(400, 700, canvas, 250);
         this.playerNames = playerNames;
@@ -34,8 +38,28 @@ export class BrickBreaker {
 
         this.gameTitle = "Brick Breaker Mode"
         this.gameSubtitle = "First to ";
-        this.bricks = map1(this.gameArea, this.bricksX, this.bricksY);
-        this.bricks2 = map1(this.gameArea2, this.bricksX, this.bricksY);
+
+        if (map == 1) {
+            this.bricks = map1(this.gameArea, this.bricksX, this.bricksY);
+            this.bricks2 = map1(this.gameArea2, this.bricksX, this.bricksY);
+        }
+        else if (map == 2) {
+            this.bricks = map2(this.gameArea, this.bricksX, this.bricksY);
+            this.bricks2 = map2(this.gameArea2, this.bricksX, this.bricksY);
+        }
+        else if (map == 3) {
+            this.bricks = map3(this.gameArea, this.bricksX, this.bricksY);
+            this.bricks2 = map3(this.gameArea2, this.bricksX, this.bricksY);
+        }
+        else if (map == 4) {
+            this.bricks = map4(this.gameArea, this.bricksX, this.bricksY);
+            this.bricks2 = map4(this.gameArea2, this.bricksX, this.bricksY);
+        }
+        else if (map == 5) {
+            this.bricks = map5(this.gameArea, this.bricksX, this.bricksY);
+            this.bricks2 = map5(this.gameArea2, this.bricksX, this.bricksY);
+        }
+
         this.maxScore = this.bricks.length - 1;
         this.walls = {
             top: 'bounce',

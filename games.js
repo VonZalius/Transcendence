@@ -4,9 +4,11 @@ import { Tournament } from './js/mods/tournament.js';
 import { LastManStanding } from './js/mods/lastManStanding.js';
 import { BrickBreaker } from './js/mods/brickBreaker.js';
 
+//import { initThreeScene } from './threeScene.js';
+
 let ctx, font;
 
-function main(gameMode, playerNames, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls) {
+function main(gameMode, playerNames, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls, map) {
     // Sélectionner le canvas et le contexte
     const canvas = document.getElementById("webgl1");
     ctx = canvas.getContext("2d");
@@ -21,6 +23,7 @@ function main(gameMode, playerNames, maxScore, paddleSpeed, paddleSize, bounceMo
         ballSpeed = Math.max(1, Math.min(ballSpeed, 10));
         ballAcceleration = Math.max(0, Math.min(ballAcceleration, 5));
         numBalls = Math.max(1, Math.min(numBalls, 10));
+        map = Math.max(1, Math.min(map, 5));
         if (playerNames.length < 2)
             throw new Error('Not enought players: ' + playerNames.length + '. 2 players minimum.');
         else if (playerNames.length > 10)
@@ -30,17 +33,17 @@ function main(gameMode, playerNames, maxScore, paddleSpeed, paddleSize, bounceMo
         if (gameMode === 'versus') {
             if (playerNames.length == 3 || playerNames.length > 4)
                 throw new Error('Not a good players count: ' + playerNames.length + '. Versus mod take 2 or 4 players.');
-            new Versus(canvas, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls);
+            new Versus(canvas, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls, map);
         } else if (gameMode === 'tournament') {
-            new Tournament(canvas, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls);
+            new Tournament(canvas, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls, map);
         } else if (gameMode === 'lastManStanding') {
             if (playerNames.length > 4)
                 throw new Error('Not a good players count: ' + playerNames.length + '. Last Man Standing mod take 2, 3 or 4 players.');
-            new LastManStanding(canvas, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls);
+            new LastManStanding(canvas, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls, map);
         } else if (gameMode === 'brickBreaker') {
             if (playerNames.length == 3 || playerNames.length > 4)
                 throw new Error('Not a good players count: ' + playerNames.length + '. Bricks mod take 1 or 2 players.');
-            new BrickBreaker(canvas, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls);
+            new BrickBreaker(canvas, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls, map);
         }
         else
             throw new Error('Unknown game mode: ' + gameMode + '. Available modes are: versus, tournament, lastManStanding, brickBreaker.');
@@ -51,11 +54,13 @@ function main(gameMode, playerNames, maxScore, paddleSpeed, paddleSize, bounceMo
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    main('versus', ['Adri', 'Dani'], 10, 5, 100, true, 5, 1, 1);
+    const ballPosition = { x: -50, y: 0 }; // Définissez ici les coordonnées de la balle
+    //zinitThreeScene('webgl1', ballPosition);
+    main('versus', ['Adri', 'Dani', 'Qwerty', 'Tida'], 10, 5, 100, true, 5, 1, 3, 2);
 });
 
-// Mode, [players], MaxScore, PaddleSpeed, PaddleSize, BounceMode, BallSpeed, BallAcceleration, numBalls
-// 'versus', ['Zalius', 'Fenris'], 10, 5, 100, true, 5, 1, 1
+// Mode, [players], MaxScore, PaddleSpeed, PaddleSize, BounceMode, BallSpeed, BallAcceleration, numBalls, map
+// 'versus', ['Adri', 'Dani'], 10, 5, 100, true, 5, 1, 1
 
 
 

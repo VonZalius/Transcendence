@@ -4,17 +4,25 @@ import { Ball } from '../scenes/ball.js';
 import { setupControls } from '../scenes/controls.js';
 import { Score } from '../scenes/score.js';
 import { waitForKeyPress } from '../scenes/assets.js';
+import { map1 } from '../scenes/maps/VS.js';
+import { map2 } from '../scenes/maps/VS.js';
+import { map3 } from '../scenes/maps/VS.js';
+import { map4 } from '../scenes/maps/VS.js';
 
 export class Tournament {
 
-    constructor(canvas, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls) {
+    constructor(canvas, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls, map) {
         this.gameArea = new GameArea(800, 600, canvas);
         this.playerNames = playerNames;
         this.ctx = ctx;
         this.font = font;
         this.isGameOver = false;
         this.balls = [];
+        this.map = map;
         this.bricks = [];
+        this.bricks = [];
+        this.bricksX = 60;
+        this.bricksY = 60;
 
         this.score = new Score(ctx, font, this.gameArea, playerNames[0], playerNames[1]);
         
@@ -33,6 +41,17 @@ export class Tournament {
             left: 'pass',
             right: 'pass'
         };
+
+        if (map == 1)
+            this.bricks = [];
+        else if (map == 2)
+            this.bricks = map1(this.gameArea, this.bricksX, this.bricksY);
+        else if (map == 3)
+            this.bricks = map2(this.gameArea, this.bricksX, this.bricksY);
+        else if (map == 4)
+            this.bricks = map3(this.gameArea, this.bricksX, this.bricksY);
+        else if (map == 5)
+            this.bricks = map4(this.gameArea, this.bricksX, this.bricksY);
         
         this.player1Paddle = new Paddle(this.gameArea.gameX + 10, this.gameArea.gameY + (this.gameArea.gameHeight - paddleSize) / 2, paddleSize / 10, paddleSize, 'white', paddleSpeed, 'vertical');
         this.player2Paddle = new Paddle(this.gameArea.gameX + this.gameArea.gameWidth - 20, this.gameArea.gameY + (this.gameArea.gameHeight - paddleSize) / 2, paddleSize / 10, paddleSize, 'white', paddleSpeed, 'vertical');
@@ -88,6 +107,17 @@ export class Tournament {
             return;
         }
 
+        if (this.map == 1)
+            this.bricks = [];
+        else if (this.map == 2)
+            this.bricks = map1(this.gameArea, this.bricksX, this.bricksY);
+        else if (this.map == 3)
+            this.bricks = map2(this.gameArea, this.bricksX, this.bricksY);
+        else if (this.map == 4)
+            this.bricks = map3(this.gameArea, this.bricksX, this.bricksY);
+        else if (this.map == 5)
+            this.bricks = map4(this.gameArea, this.bricksX, this.bricksY);
+
         this.player1Paddle.resetPosition();
         this.player2Paddle.resetPosition();
         this.score.reset();
@@ -105,6 +135,7 @@ export class Tournament {
         this.gameArea.draw(this.ctx);
         this.player1Paddle.draw(this.ctx);
         this.player2Paddle.draw(this.ctx);
+        this.bricks.forEach(brick => brick.draw(this.ctx));
         this.score.drawTitle(this.gameTitle);
         this.score.drawSubtitle(this.gameSubtitle, this.maxScore + 1);
         this.score.drawScore();
@@ -152,6 +183,7 @@ export class Tournament {
         this.player1Paddle.draw(this.ctx);
         this.player2Paddle.draw(this.ctx);
         this.balls.forEach(ball => ball.draw(this.ctx));
+        this.bricks.forEach(brick => brick.draw(this.ctx));
         this.game_over_screen();
         this.score.drawTitle(this.gameTitle);
         this.score.drawSubtitle(this.gameSubtitle, this.maxScore + 1);
@@ -206,6 +238,8 @@ export class Tournament {
             this.currentMatch = 0;
             this.activePlayers = topPlayers;
             this.round++;
+
+
             this.startMatch();
         }
     }
