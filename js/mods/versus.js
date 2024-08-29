@@ -11,9 +11,10 @@ import { map4 } from '../scenes/maps/VS.js';
 
 export class Versus {
 
-    constructor(canvas, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls, map) {
+    constructor(canvas, playerNames, key, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls, map) {
         this.gameArea = new GameArea(800, 600, canvas);
         this.playerNames = playerNames;
+        this.key = key;
         this.ctx = ctx;
         this.isGameOver = false;
         this.paddles = [];
@@ -34,7 +35,7 @@ export class Versus {
         this.score = new Score(ctx, font, this.gameArea, team1Names, team2Names);
 
         this.gameTitle = "Versus Mode"
-        this.gameSubtitle = "First to ";
+        this.gameSubtitle = "FirstKey to ";
         this.maxScore = maxScore - 1;
         this.walls = {
             top: 'bounce',
@@ -85,7 +86,10 @@ export class Versus {
     }
 
     main() {
-        setupControls(...this.paddles);
+        if (this.playerNames.length == 4) 
+            setupControls(this.key, 2, ...this.paddles);
+        else
+            setupControls(this.key, 1, ...this.paddles);
 
         this.resetPaddles();
 

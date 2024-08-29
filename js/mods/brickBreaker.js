@@ -12,10 +12,11 @@ import { map5 } from '../scenes/maps/BB.js';
 
 export class BrickBreaker {
 
-    constructor(canvas, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls, map) {
+    constructor(canvas, playerNames, key, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls, map) {
         this.gameArea = new GameArea(400, 700, canvas, -250);
         this.gameArea2 = new GameArea(400, 700, canvas, 250);
         this.playerNames = playerNames;
+        this.key = key;
         this.ctx = ctx;
         this.isGameOver = false;
         this.paddles = [];
@@ -102,7 +103,7 @@ export class BrickBreaker {
     }
 
     main() {
-        setupControls(...this.paddles);
+        setupControls(this.key, 2, ...this.paddles);
 
         this.resetPaddles();
 

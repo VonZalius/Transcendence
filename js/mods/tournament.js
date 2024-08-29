@@ -11,9 +11,10 @@ import { map4 } from '../scenes/maps/VS.js';
 
 export class Tournament {
 
-    constructor(canvas, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls, map) {
+    constructor(canvas, playerNames, key, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls, map) {
         this.gameArea = new GameArea(800, 600, canvas);
         this.playerNames = playerNames;
+        this.key = key;
         this.ctx = ctx;
         this.font = font;
         this.isGameOver = false;
@@ -97,7 +98,7 @@ export class Tournament {
     }
 
     main() {
-        setupControls(this.player1Paddle, this.player2Paddle);
+        setupControls(this.key, 1, this.player1Paddle, this.player2Paddle);
         this.startMatch();
     }
 

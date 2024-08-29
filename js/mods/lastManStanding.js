@@ -11,9 +11,10 @@ import { map4 } from '../scenes/maps/LMS.js';
 
 export class LastManStanding {
 
-    constructor(canvas, playerNames, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls, map) {
+    constructor(canvas, playerNames, key, ctx, font, maxScore, paddleSpeed, paddleSize, bounceMode, ballSpeed, ballAcceleration, numBalls, map) {
         this.gameArea = new GameArea(700, 700, canvas);
         this.playerNames = playerNames;
+        this.key = key;
         this.ctx = ctx;
         this.isGameOver = false;
         this.paddles = [];
@@ -96,7 +97,7 @@ export class LastManStanding {
     }
 
     main() {
-        setupControls(...this.paddles);
+        setupControls(this.key, 1, ...this.paddles);
 
         this.resetPaddles();
 

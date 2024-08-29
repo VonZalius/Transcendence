@@ -197,7 +197,7 @@ export class Ball {
                         if (this.useAngleBounce) {
                             this.angleBounceX(paddle);
                         } else {
-                            this.speedX = -this.speed;
+                            this.speedY = -this.speed;
                         }
                     }
                 }

@@ -1,66 +1,44 @@
-export function setupControls(...paddles) {
+export function setupControls(key, type, ...paddles) {
+    // Si type est 2 et qu'il y a 4 paires dans key, on change l'ordre
+    let keyOrder = key;
+    if (type === 2 && key.length === 4) {
+        keyOrder = [key[0], key[2], key[1], key[3]];
+    }
+
     document.addEventListener("keydown", (evt) => {
         paddles.forEach((paddle, index) => {
-            switch (evt.key) {
-                case "w":
-                    if (index === 0) paddle.up = true;
-                    break;
-                case "s":
-                    if (index === 0) paddle.down = true;
-                    break;
-                case "ArrowUp":
-                    if (index === 1) paddle.up = true;
-                    break;
-                case "ArrowDown":
-                    if (index === 1) paddle.down = true;
-                    break;
-                case "i":
-                    if (index === 2) paddle.up = true;
-                    break;
-                case "k":
-                    if (index === 2) paddle.down = true;
-                    break;
-                case "8":
-                    if (index === 3) paddle.up = true;
-                    break;
-                case "5":
-                    if (index === 3) paddle.down = true;
-                    break;
+            if (index < keyOrder.length) {
+                const [upKey, downKey] = keyOrder[index];
+                switch (evt.key) {
+                    case upKey:
+                        paddle.up = true;
+                        break;
+                    case downKey:
+                        paddle.down = true;
+                        break;
+                }
             }
         });
     });
 
     document.addEventListener("keyup", (evt) => {
         paddles.forEach((paddle, index) => {
-            switch (evt.key) {
-                case "w":
-                    if (index === 0) paddle.up = false;
-                    break;
-                case "s":
-                    if (index === 0) paddle.down = false;
-                    break;
-                case "ArrowUp":
-                    if (index === 1) paddle.up = false;
-                    break;
-                case "ArrowDown":
-                    if (index === 1) paddle.down = false;
-                    break;
-                case "i":
-                    if (index === 2) paddle.up = false;
-                    break;
-                case "k":
-                    if (index === 2) paddle.down = false;
-                    break;
-                case "8":
-                    if (index === 3) paddle.up = false;
-                    break;
-                case "5":
-                    if (index === 3) paddle.down = false;
-                    break;
+            if (index < keyOrder.length) {
+                const [upKey, downKey] = keyOrder[index];
+                switch (evt.key) {
+                    case upKey:
+                        paddle.up = false;
+                        break;
+                    case downKey:
+                        paddle.down = false;
+                        break;
+                }
             }
         });
     });
 }
+
+
 
 
 
