@@ -11,6 +11,7 @@ export class Score {
         this.player2Score = 0;
         this.player3Score = 0;
         this.player4Score = 0;
+        this.finalTournamentScore = []; //[[player1, score1], [player2, score2], ...]
     }
 
     incrementPlayer1Score() {
@@ -98,6 +99,8 @@ export class Score {
 
         this.ctx.fillText(`Round ${round}`, startX, startY);
         startY += 30;
+
+        this.finalTournamentScore = [];
     
         for (const [player, winCount] of Object.entries(wins)) {
             if (activePlayers.includes(player)) {
@@ -110,8 +113,12 @@ export class Score {
                 this.ctx.strokeStyle = 'white';
                 this.ctx.stroke();
             }
+
+            this.finalTournamentScore.push([player, winCount]);
+
             startY += 30; // Espace entre les lignes
         }
+
     }
 
     drawTournamentEnd(winner) {
@@ -120,5 +127,15 @@ export class Score {
         this.ctx.fillStyle = 'white';
         this.ctx.textAlign = 'center';
         this.ctx.fillText(`${winner} wins the tournament!`, this.ctx.canvas.width / 2, this.ctx.canvas.height / 2);
+
+        // TEMPORAIRE ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        const scoreboard = document.getElementById('scoreboard');
+        scoreboard.innerHTML = `<h3>Scoreboard</h3>`;
+        this.finalTournamentScore.forEach(([player, winCount]) => {
+            const playerScore = document.createElement('p');
+            playerScore.textContent = `${player}: ${winCount} rounds win`;
+            scoreboard.appendChild(playerScore);
+        });
+        // TEMPORAIRE ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     }
 }

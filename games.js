@@ -59,7 +59,7 @@ function main(gameMode, playerNames, key, maxScore, paddleSpeed, paddleSize, bou
 
 document.addEventListener("DOMContentLoaded", () => {
     const ballPosition = { x: -50, y: 0 }; // Définissez ici les coordonnées de la balle
-    main('versus', ['Adri', 'Dani'], [['w','s'],['ArrowUp','ArrowDown']], 10, 5, 100, true, 5, 1, 1, 1);
+    main('tournament', ['Adri', 'Dani', 'Qwerty'], [['w','s'],['ArrowUp','ArrowDown'], ['e','d']], 10, 5, 100, true, 5, 1, 1, 1);
 });
 
 
