@@ -129,6 +129,8 @@ export class Score {
         this.ctx.fillText(`${winner} wins the tournament!`, this.ctx.canvas.width / 2, this.ctx.canvas.height / 2);
 
         // TEMPORAIRE ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        this.finalTournamentScore.sort((a, b) => b[1] - a[1]); 
+
         const scoreboard = document.getElementById('scoreboard');
         scoreboard.innerHTML = `<h3>Scoreboard</h3>`;
         this.finalTournamentScore.forEach(([player, winCount]) => {

@@ -232,8 +232,8 @@ export class Tournament {
         let topPlayers = Object.keys(this.wins).filter(player => this.wins[player] === maxWins);
 
         if (topPlayers.length === 1) {
-            this.score.drawTournamentEnd(topPlayers[0]);
             this.score.drawTournamentScore(this.wins, this.round, this.activePlayers);
+            this.score.drawTournamentEnd(topPlayers[0]);
         } else {
             this.matches = this.createAllMatches(topPlayers);
             this.currentMatch = 0;
